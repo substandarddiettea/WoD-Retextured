@@ -24,6 +24,8 @@ until the game closes before putting the original files back.
 this is very important, if the files are not restored the game will raise a "file corrupted" error, ]
 thats also why theres a delay on the injection of the new textures
 
+make sure you have the country humans skin pack equipped to see your skins, its the one where they have cute little eyes
+
 important
 
 do not close the launcher window while the game is running.
