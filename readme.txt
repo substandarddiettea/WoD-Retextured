@@ -13,7 +13,7 @@ setup
 	"C:\Program Files (x86)\Steam\steamapps\common\War of Dots"
 
 2. put the replacement .png files in the "pack" folder.
-	the files need to have the same names as the textures they replace.
+	the files need to have the same names as the textures they replace. i.e. red_inf1.png
 
 3. keep "pack" and "retexturedlaunch.bat" together in this folder.
 
@@ -21,7 +21,9 @@ usage
 
 double-click "retexturedlaunch.bat".
 the launcher will start the game, replace any matching textures, and wait
-until the game closes before putting the original files back.
+until the game closes before putting the original files back. 
+this is very important, if the files are not restored the game will raise a "file corrupted" error, ]
+thats also why theres a delay on the injection of the new textures
 
 important
 
@@ -41,5 +43,5 @@ if a texture does not change, check that its png filename exactly matches
 the original filename in:
 "War of Dots\assets\skins\countryballs"
 
-have fun and try not to break anything :)
+have fun and try not to break anything :) oh and, at some point ill add support for 4 color changing via basegame textures.
 
