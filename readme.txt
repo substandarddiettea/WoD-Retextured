@@ -1,11 +1,10 @@
-
-retextured v1.0 by foxware
-
 the tl:dr
 this launches War of Dots with a custom texture pack enabled.
 it backs up the original countryball textures, replaces them with the
 png files in the "pack" folder, then restores the originals when the game
 closes.
+
+contains a basic replacement for infantry, replace those files with your pack
 
 setup
 
