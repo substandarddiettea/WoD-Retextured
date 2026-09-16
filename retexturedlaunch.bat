@@ -37,8 +37,15 @@ if not exist "%GAME%" (
 
 echo "launching %GAME%..."
 start "" "%GAME%"
-echo "[info] waiting 5 seconds for %GAME% to start fully"
-timeout /t 5 /nobreak >nul
+echo "[info] waiting 8 seconds for %GAME% to start fully"
+timeout /t 8 /nobreak >nul
+
+tasklist /fi "IMAGENAME eq %GAME_NAME%" 2>nul | find /i /n "%GAME_NAME%" >nul
+if errorlevel 1 (
+    echo "[error] it seems the game did not properly start, this may just be an issue with timings! please try again."
+    pause
+    exit /b 1
+)
 
 echo "[info] file verification bypassed! beginning file replacement..."
 
@@ -84,5 +91,5 @@ if exist "%BACKUPDIR%" (
 )
 
 echo "[info] original files restored, exiting..."
-timeout /t 2 /nobreak >nul
+timeout /t 0.5 /nobreak >nul
 exit /b

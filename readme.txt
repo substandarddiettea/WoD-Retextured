@@ -1,10 +1,11 @@
+
+retextured v1.0 by foxware
+
 the tl:dr
 this launches War of Dots with a custom texture pack enabled.
 it backs up the original countryball textures, replaces them with the
 png files in the "pack" folder, then restores the originals when the game
 closes.
-
-contains a basic replacement for infantry, replace those files with your pack
 
 setup
 
@@ -24,8 +25,6 @@ until the game closes before putting the original files back.
 this is very important, if the files are not restored the game will raise a "file corrupted" error, ]
 thats also why theres a delay on the injection of the new textures
 
-make sure you have the country humans skin pack equipped to see your skins, its the one where they have cute little eyes
-
 important
 
 do not close the launcher window while the game is running.
@@ -43,6 +42,8 @@ above and that the executable is named "game.exe".
 if a texture does not change, check that its png filename exactly matches
 the original filename in:
 "War of Dots\assets\skins\countryballs"
+
+btw, if you mess up your files you are able to verify game files via steam to fix it, thanks gabe!
 
 have fun and try not to break anything :) oh and, at some point ill add support for 4 color changing via basegame textures.
 
