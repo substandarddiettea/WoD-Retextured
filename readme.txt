@@ -1,112 +1,57 @@
 
-retextured v1.0 by foxware
 
-the tl:dr
-this launches War of Dots with a custom texture pack enabled.
-it backs up the original png files, replaces them with matching files from
-the selected pack, then restores the originals when the game closes.
-
-setup
-
-1. make sure War of Dots is installed through Steam.
-	the launcher first checks the original Steam location:
-	"C:\Program Files (x86)\Steam\steamapps\common\War of Dots"
-	if that is not found, it checks Steam registry entries, registered Steam
-	libraries, and Steam app manifests. it does not scan the whole drive.
-
-	if automatic detection does not find the game, create "wodroot.txt" beside
-	"retexturedlaunch.bat". put the full War of Dots game folder path on its
-	first line, for example:
-	"D:\SteamLibrary\steamapps\common\War of Dots"
-
-2. keep the "helpers" folder beside "retexturedlaunch.bat".
-	the launcher uses "helpers\find-wodroot.ps1" for automatic Steam detection.
-
-3. make a subfolder for each texture pack inside the "pack" folder.
-	put the replacement .png files in the pack subfolder. the files need to have
-	the same names as the textures they replace. i.e. red_inf1.png
-
-4. keep "pack", "wallpapers", "helpers", and "retexturedlaunch.bat" together in this folder.
-
-5. put wallpaper replacement files named "winter.png", "troopers.png", "red.png",
-	and/or "home_background.png" directly inside the "wallpapers" folder.
-	filenames must match the game's files. "home_background.png" is replaced in
-	"War of Dots\assets"; the other wallpaper files are replaced in
-	"War of Dots\assets\wallpapers".
+WoD Retextured v5 by foxware aka premiumdiettea
 
 
-much of this should be setup in the intial download
+a basic skinpack and wallpaper loaded for war of dots, now with a ui!
 
-usage
+usage:
 
-double-click "retexturedlaunch.bat".
-the launcher numbers the pack subfolders and asks which pack to use for:
+1. Start WoDLauncher.exe
+2. Confirm the detected War of Dots installation. Use Browse if needed.
+3. Choose a pack for each category, or choose Skip.
+4. Enable Apply wallpapers if desired.
+5. Click Launch With Selected Packs.
+6. Select the skin packs and/or wallpapers from the in-game skinpack selection.
+6. Keep the launcher open until the game closes so the original files can be
+   restored.
 
-	countryballs: "War of Dots\assets\skins\countryballs"
-	coldwar: "War of Dots\assets\skins\coldwar"
-	agincourt: "War of Dots\assets\skins\agincourt"
-	base assets: directly inside "War of Dots\assets"
-	wallpapers: "War of Dots\assets\wallpapers" and "home_background.png" in
-	"War of Dots\assets"
+War of Dots loads skin packs and wallpapers from disk while it is running.
+The launcher therefore starts the game first and applies the selected files
+shortly afterward. You can also change the selections at any time while the
+game is open and click Refresh. Refresh restores the original session files and
+applies the new selection without restarting the game. If skins do not appear return to the 
 
-choose a pack number for each location, or leave the selection blank to skip
-that location. the same pack or different packs can be selected for each one.
-only matching png files are replaced; subfolders inside a selected pack are
-not searched.
-
-after the skin-pack choices, the launcher asks "apply wallpapers (y/n):".
-answer y to replace every matching PNG in the local "wallpapers" folder, or
-n to skip wallpapers. wallpaper files are backed up temporarily and restored
-when the game closes. 
-important note is that wallpapers also have the "same name" rule
-
-if no packs are selected, enter y to launch with the game's original
-textures, n to close, or r to return to pack selection.
-
-the launcher waits for the game to start before replacing files. when the
-game closes, it restores the backed-up files and removes the temporary backup.
-
-important
-
-do not close the launcher window while the game is running.
-the launcher needs to stay open so it can restore the original files when
-the game exits. closing it early can leave replacement files in the game
-folder and may cause Steam's file verification to report corrupted files.
-
-the texture pack is temporary. the original files are backed up before each
-replacement and restored when the game closes. if a copy or backup fails,
-the launcher reports the file and attempts to restore the original files.
-
-4 color and boat texture changes are supported through the base game assets.
-select a pack for base assets when those textures are needed.
-
-troubleshooting
-
-if the game cannot be found, check that the game folder contains "game.exe".
-you can also create "wodroot.txt" manually with the full game folder path.
-
-if automatic detection is not working, make sure "helpers\find-wodroot.ps1"
-is still beside the launcher and that Windows PowerShell is available.
-
-if a texture does not change, check that its png filename exactly matches
-the original filename and that it is in the pack folder's top level.
-
-if the launcher reports that a target folder is missing, verify the game's
-asset folders have not been renamed or moved.
-
-if you mess up the files, verify the game files through Steam to restore them.
-
-have fun and try not to break anything c:
+Do not close the launcher while a texture session is active. If it stops
+unexpectedly, use Steam file verification before playing normally.
+This will restore the missing or replaced files to their normal state if the launcher fails to do so,
+typically caused by it being stopped early.
 
 
 
-oh also if you want developer diagnostics
-the launcher has developer file checks disabled by default.
-to enable them, open "retexturedlaunch.bat" and change:
-	set "DEV_ECHOS=disabled"
-to:
-	set "DEV_ECHOS=enabled"
+Packs and wallpapers
 
-when enabled, the launcher reports whether important launcher files and game
-folders were found. the checks only test the known launcher and War of Dots
-paths; they do not search the whole drive or change any files.
+Put replacement PNG files directly inside each pack folder as shown the example packs here.
+ensure that filenames match the game files they replace exactly.
+    pack/
+      smileypack/
+        red_inf1.png
+      tourney/
+        red_inf1.png
+
+Wallpaper files go directly inside wallpapers/. Supported names include
+winter.png, troopers.png, red.png, and home_background.png. The first three
+replace files in the game's assets/wallpapers folder. home_background.png
+replaces the file in the game's assets folder, becoming the default background.
+
+
+
+Game detection
+
+The launcher checks the normal Steam location, Steam registry settings,
+registered Steam libraries, and Steam app manifests. It does not scan the
+whole drive, only neccessary areas for detection.
+
+If detection fails, create wodroot.txt beside WoDLauncher.exe and put the full
+War of Dots folder path on its first line. The folder must contain game.exe.
+This adds a default for the detection to fall back on, similar to browse to select.
