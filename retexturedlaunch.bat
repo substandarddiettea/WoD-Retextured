@@ -43,11 +43,13 @@ echo "[info] using War of Dots installation: !WODROOT!"
 set "GAME=%WODROOT%\game.exe"
 for %%g in ("%GAME%") do set "GAME_NAME=%%~nxg"
 set "IMGDIR=pack"
+set "WALLPAPERDIR=wallpapers"
 set "BACKUPDIR=backup"
 set "COUNTRYBALLSDIR=%WODROOT%\assets\skins\countryballs"
 set "COLDWAR_DIR=%WODROOT%\assets\skins\coldwar"
 set "AGINCOURT_DIR=%WODROOT%\assets\skins\agincourt"
 set "BASE_ASSETS_DIR=%WODROOT%\assets"
+set "WALLPAPERS_DIR=%WODROOT%\assets\wallpapers"
 if /i "!DEV_ECHOS!"=="true" call :DEV_REPORT
 
 :: ensures the script is running correctly
@@ -70,9 +72,13 @@ if "%PACKCOUNT%"=="0" (
     exit /b 1
 )
 
+set "WALLPAPER_FILE_COUNT=0"
+if exist "%WALLPAPERDIR%" for %%f in ("%WALLPAPERDIR%\*.png") do if exist "%%~f" set /a WALLPAPER_FILE_COUNT+=1
+if not "%WALLPAPER_FILE_COUNT%"=="0" set "WALLPAPERPACK=%~dp0wallpapers"
+
 echo.
 :PACK_SELECTION
-echo "[info] available packs:"
+echo "[info] available skinpacks:"
 for /l %%n in (1,1,%PACKCOUNT%) do echo "%%n. !PACKNAME%%n!"
 echo.
 set "PACKCHOICE="
@@ -95,7 +101,23 @@ set /p "PACKCHOICE=(4 Colors + boats) select a pack for base assets (blank to sk
 if defined PACKCHOICE call set "BASE_ASSETSPACK=%%PACK!PACKCHOICE!%%"
 if defined PACKCHOICE if not defined BASE_ASSETSPACK echo "[error] invalid base assets pack selection: %PACKCHOICE%"
 if defined BASE_ASSETSPACK echo "[info] base assets pack selected: !PACKNAME%PACKCHOICE%!"
-if not defined COUNTRYBALLSPACK if not defined COLDWARPACK if not defined AGINCOURTPACK if not defined BASE_ASSETSPACK (
+
+:WALLPAPER_PROMPT
+set "WALLPAPERPACK="
+if "%WALLPAPER_FILE_COUNT%"=="0" (
+    echo "[info] no wallpaper PNG files found in %WALLPAPERDIR%; skipping wallpapers."
+) else (
+    set "WALLPAPER_CHOICE="
+    set /p "WALLPAPER_CHOICE=apply wallpapers (y/n): "
+    if /i "!WALLPAPER_CHOICE!"=="y" set "WALLPAPERPACK=%~dp0wallpapers"
+    if /i "!WALLPAPER_CHOICE!"=="n" echo "[info] wallpapers skipped."
+    if not defined WALLPAPERPACK if /i not "!WALLPAPER_CHOICE!"=="n" if /i not "!WALLPAPER_CHOICE!"=="y" (
+        echo "[error] please enter y or n."
+        goto WALLPAPER_PROMPT
+    )
+)
+
+if not defined COUNTRYBALLSPACK if not defined COLDWARPACK if not defined AGINCOURTPACK if not defined BASE_ASSETSPACK if not defined WALLPAPERPACK (
     call :ASK_BASE_GAME
     if errorlevel 2 goto PACK_SELECTION
     if errorlevel 1 exit /b 0
@@ -121,6 +143,8 @@ if errorlevel 1 (
     if defined COLDWARPACK call :RESTORE_PACK "%BACKUPDIR%\coldwar" "%COLDWAR_DIR%"
     if defined AGINCOURTPACK call :RESTORE_PACK "%BACKUPDIR%\agincourt" "%AGINCOURT_DIR%"
     if defined BASE_ASSETSPACK call :RESTORE_PACK "%BACKUPDIR%\base_assets" "%BASE_ASSETS_DIR%"
+    if defined WALLPAPERPACK call :RESTORE_PACK "%BACKUPDIR%\wallpapers" "%WALLPAPERS_DIR%"
+    if defined WALLPAPERPACK call :RESTORE_FILE "!WALLPAPERPACK!" "%BASE_ASSETS_DIR%" "%BACKUPDIR%\home_background" "home_background.png"
     if exist "%BACKUPDIR%" rmdir /s /q "%BACKUPDIR%"
     pause
     exit /b 1
@@ -143,6 +167,10 @@ if defined COUNTRYBALLSPACK call :REPLACE_PACK "!COUNTRYBALLSPACK!" "%COUNTRYBAL
 if defined COLDWARPACK call :REPLACE_PACK "!COLDWARPACK!" "%COLDWAR_DIR%" "%BACKUPDIR%\coldwar"
 if defined AGINCOURTPACK call :REPLACE_PACK "!AGINCOURTPACK!" "%AGINCOURT_DIR%" "%BACKUPDIR%\agincourt"
 if defined BASE_ASSETSPACK call :REPLACE_PACK "!BASE_ASSETSPACK!" "%BASE_ASSETS_DIR%" "%BACKUPDIR%\base_assets"
+if defined WALLPAPERPACK set "SKIP_HOME_BACKGROUND=1"
+if defined WALLPAPERPACK call :REPLACE_PACK "!WALLPAPERPACK!" "%WALLPAPERS_DIR%" "%BACKUPDIR%\wallpapers"
+set "SKIP_HOME_BACKGROUND="
+if defined WALLPAPERPACK call :REPLACE_FILE "!WALLPAPERPACK!" "%BASE_ASSETS_DIR%" "%BACKUPDIR%\home_background" "home_background.png"
 
 if defined COPY_FAILED (
     echo "[error] one or more texture files could not be replaced."
@@ -151,6 +179,8 @@ if defined COPY_FAILED (
     if defined COLDWARPACK call :RESTORE_PACK "%BACKUPDIR%\coldwar" "%COLDWAR_DIR%"
     if defined AGINCOURTPACK call :RESTORE_PACK "%BACKUPDIR%\agincourt" "%AGINCOURT_DIR%"
     if defined BASE_ASSETSPACK call :RESTORE_PACK "%BACKUPDIR%\base_assets" "%BASE_ASSETS_DIR%"
+    if defined WALLPAPERPACK call :RESTORE_PACK "%BACKUPDIR%\wallpapers" "%WALLPAPERS_DIR%"
+    if defined WALLPAPERPACK call :RESTORE_FILE "!WALLPAPERPACK!" "%BASE_ASSETS_DIR%" "%BACKUPDIR%\home_background" "home_background.png"
     if exist "%BACKUPDIR%" rmdir /s /q "%BACKUPDIR%"
     pause
     exit /b 1
@@ -175,6 +205,8 @@ if defined COUNTRYBALLSPACK call :RESTORE_PACK "%BACKUPDIR%\countryballs" "%COUN
 if defined COLDWARPACK call :RESTORE_PACK "%BACKUPDIR%\coldwar" "%COLDWAR_DIR%"
 if defined AGINCOURTPACK call :RESTORE_PACK "%BACKUPDIR%\agincourt" "%AGINCOURT_DIR%"
 if defined BASE_ASSETSPACK call :RESTORE_PACK "%BACKUPDIR%\base_assets" "%BASE_ASSETS_DIR%"
+if defined WALLPAPERPACK call :RESTORE_PACK "%BACKUPDIR%\wallpapers" "%WALLPAPERS_DIR%"
+if defined WALLPAPERPACK call :RESTORE_FILE "!WALLPAPERPACK!" "%BASE_ASSETS_DIR%" "%BACKUPDIR%\home_background" "home_background.png"
 if exist "%BACKUPDIR%" rmdir /s /q "%BACKUPDIR%"
 
 echo "[info] original files restored, exiting..."
@@ -200,19 +232,22 @@ for %%f in ("%~1\*.png") do (
     set /a PACK_FILE_COUNT+=1
     set "filename=%%~nxf"
 
-    if exist "!TARGET_DIR!\!filename!" (
-        copy /y "!TARGET_DIR!\!filename!" "!BACKUP_PATH!\!filename!" >nul
-        if errorlevel 1 (
-            echo "[error] could not back up: !TARGET_DIR!\!filename!"
-            set "COPY_FAILED=1"
+    if defined SKIP_HOME_BACKGROUND if /i "!filename!"=="home_background.png" (
+        echo [info] skipped home_background.png for wallpaper directory
+    ) else (
+        if exist "!TARGET_DIR!\!filename!" (
+            copy /y "!TARGET_DIR!\!filename!" "!BACKUP_PATH!\!filename!" >nul
+            if errorlevel 1 (
+                echo "[error] could not back up: !TARGET_DIR!\!filename!"
+                set "COPY_FAILED=1"
+            )
         )
+        copy /y "%%f" "!TARGET_DIR!\!filename!" >nul
+        if errorlevel 1 (
+            echo "[error] could not replace: !TARGET_DIR!\!filename!"
+            set "COPY_FAILED=1"
+        ) else echo [info] replaced !filename!
     )
-
-    copy /y "%%f" "!TARGET_DIR!\!filename!" >nul
-    if errorlevel 1 (
-        echo "[error] could not replace: !TARGET_DIR!\!filename!"
-        set "COPY_FAILED=1"
-    ) else echo [info] replaced !filename!
 )
 if "%PACK_FILE_COUNT%"=="0" echo "[error] no PNG files found in pack: %~1"
 if "%PACK_FILE_COUNT%"=="0" set "COPY_FAILED=1"
@@ -256,6 +291,50 @@ if exist "!BACKUP_PATH!" (
 )
 exit /b
 
+:REPLACE_FILE
+set "SOURCE_FILE=%~1\%~4"
+set "TARGET_DIR=%~2"
+set "BACKUP_PATH=%~3"
+set "TARGET_FILE=!TARGET_DIR!\%~4"
+if not exist "!TARGET_DIR!" (
+    echo "[error] target directory not found: !TARGET_DIR!"
+    set "COPY_FAILED=1"
+    exit /b 1
+)
+if not exist "!SOURCE_FILE!" exit /b 0
+if not exist "!BACKUP_PATH!" mkdir "!BACKUP_PATH!"
+if not exist "!BACKUP_PATH!" (
+    echo "[error] could not create backup directory: !BACKUP_PATH!"
+    set "COPY_FAILED=1"
+    exit /b 1
+)
+if exist "!TARGET_FILE!" (
+    copy /y "!TARGET_FILE!" "!BACKUP_PATH!\%~4" >nul
+    if errorlevel 1 (
+        echo "[error] could not back up: !TARGET_FILE!"
+        set "COPY_FAILED=1"
+        exit /b 1
+    )
+)
+copy /y "!SOURCE_FILE!" "!TARGET_FILE!" >nul
+if errorlevel 1 (
+    echo "[error] could not replace: !TARGET_FILE!"
+    set "COPY_FAILED=1"
+) else echo [info] replaced %~4
+exit /b
+
+:RESTORE_FILE
+set "BACKUP_FILE=%~3\%~4"
+set "TARGET_FILE=%~2\%~4"
+if exist "!BACKUP_FILE!" (
+    copy /y "!BACKUP_FILE!" "!TARGET_FILE!" >nul
+    if errorlevel 1 (
+        echo "[error] could not restore: !TARGET_FILE!"
+        set "COPY_FAILED=1"
+    ) else echo [info] restored %~4
+)
+exit /b
+
 :DEV_REPORT
 :: reports important launcher files and game folders without changing anything
 echo "[dev] launcher files:"
@@ -263,6 +342,7 @@ call :DEV_CHECK_PATH "%~dp0retexturedlaunch.bat"
 call :DEV_CHECK_PATH "%~dp0readme.txt"
 call :DEV_CHECK_PATH "%~dp0helpers\find-wodroot.ps1"
 call :DEV_CHECK_PATH "%~dp0pack"
+call :DEV_CHECK_PATH "%~dp0wallpapers"
 call :DEV_CHECK_PATH "%~dp0wodroot.txt"
 call :DEV_CHECK_PATH "%~dp0backup"
 echo "[dev] game files and folders:"

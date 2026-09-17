@@ -26,7 +26,13 @@ setup
 	put the replacement .png files in the pack subfolder. the files need to have
 	the same names as the textures they replace. i.e. red_inf1.png
 
-4. keep "pack", "helpers", and "retexturedlaunch.bat" together in this folder.
+4. keep "pack", "wallpapers", "helpers", and "retexturedlaunch.bat" together in this folder.
+
+5. put wallpaper replacement files named "winter.png", "troopers.png", "red.png",
+	and/or "home_background.png" directly inside the "wallpapers" folder.
+	filenames must match the game's files. "home_background.png" is replaced in
+	"War of Dots\assets"; the other wallpaper files are replaced in
+	"War of Dots\assets\wallpapers".
 
 
 much of this should be setup in the intial download
@@ -40,11 +46,19 @@ the launcher numbers the pack subfolders and asks which pack to use for:
 	coldwar: "War of Dots\assets\skins\coldwar"
 	agincourt: "War of Dots\assets\skins\agincourt"
 	base assets: directly inside "War of Dots\assets"
+	wallpapers: "War of Dots\assets\wallpapers" and "home_background.png" in
+	"War of Dots\assets"
 
 choose a pack number for each location, or leave the selection blank to skip
 that location. the same pack or different packs can be selected for each one.
 only matching png files are replaced; subfolders inside a selected pack are
 not searched.
+
+after the skin-pack choices, the launcher asks "apply wallpapers (y/n):".
+answer y to replace every matching PNG in the local "wallpapers" folder, or
+n to skip wallpapers. wallpaper files are backed up temporarily and restored
+when the game closes. 
+important note is that wallpapers also have the "same name" rule
 
 if no packs are selected, enter y to launch with the game's original
 textures, n to close, or r to return to pack selection.
